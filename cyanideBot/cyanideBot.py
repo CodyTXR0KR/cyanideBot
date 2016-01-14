@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sys
 import urllib2
@@ -44,7 +45,7 @@ def EmailNotify(link):
 
 def EmailError(msg):
     msg = MIMEMultipart()
-    msg['Subject'] = 'webdev-server.cyanideBot -- message'
+    msg['Subject'] = 'webdev-server.cyanideBot -- error'
     msg['From'] = botmail
     msg['To'] = devmail
 
@@ -63,25 +64,30 @@ def GetDate():
     return strftime('%b %d %Y')
 
 #  Returns a string containing first regEx match
-def GetUrl():
+def GetUrls():
+	urls = {}
 	response = urllib2.urlopen('http://explosm.net')
 	html = response.read()
-	imgUrl = re.findall(r'<img id="featured-comic" src="//(.*?)"/></a>', html)
+	urls['imgUrl'] = "http://" + re.findall(r'<img id="featured-comic" src="//(.*?)"/></a>', html)[0]
+	urls['permalinkUrl'] = re.findall(r'<input id="permalink" type="text" value="(.*?)" onclick=', html)[0]
+	urls['hotlinkUrl'] = re.findall(r'<a href="(.*?)"><img id="featured-comic" src="', html)[0]
 	try:
-		return "http://" + imgUrl[0]
+		#return "http://" + imgUrl[0], linkUrl[0]
+		return urls
 	except Exception as error:
 		EmailError(error)
 		sys.exit()
 
 
-def MakePost(client, imgUrl):
+def MakePost(client):
+	urls = GetUrls()
 	meta = {}
 	meta['album'] = None
 	meta['name'] = None
 	meta['title'] = "Daily dose of Cyanide for " + GetDate()
-	meta['description'] = "Find more at: http://explosm.net"
+	meta['description'] = "Todays comic -- " + urls['hotlinkUrl'] + "\nPermalink -- " + urls['permalinkUrl'] + "\nFind more at: http://explosm.net"
 	try:
-		response = client.upload_from_url(imgUrl, meta, anon=False)
+		response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
 		EmailNotify(response['link'])
 	except Exception as error:
 		EmailError(error)
@@ -90,4 +96,7 @@ def MakePost(client, imgUrl):
 
 """ BOT FUNCTIONALITY """
 client = StartClient()
-MakePost(client, GetUrl())
+MakePost(client)
+
+""" TESTING """
+#print GetUrls()
