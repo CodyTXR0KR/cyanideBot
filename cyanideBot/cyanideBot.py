@@ -10,6 +10,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from time import strftime
+
 # Requires Imgur's Python api to be installed. >> https://github.com/Imgur/imgurpython
 # Documentation >> https://api.imgur.com/
 from imgurAPIClient import StartClient
@@ -37,45 +38,6 @@ devmail = config.get('credentials', 'devmail')
 
 #  Initialize imgurAPIClient
 client = StartClient()
-
-
-#  EmailNotify() && EmailError() can/should be refactored into a single function call
-# #  Email notification message to developer
-# def EmailNotify(link):
-#     msg = MIMEMultipart()
-#     msg['Subject'] = 'webdev-server.cyanideBot -- message'
-#     msg['From'] = botmail
-#     msg['To'] = devmail
-
-#     text = MIMEText("cyanideBot>>explosmdotnet has posted an image to Imgur\n" + link)
-#     msg.attach(text)
-
-#     server = smtplib.SMTP('smtp.gmail.com:587')
-#     server.ehlo()
-#     server.starttls()
-#     server.ehlo()
-#     server.login(botmail, password)
-#     server.sendmail(botmail, devmail, msg.as_string())
-#     server.quit()
-
-
-# #  Email error message to developer
-# def EmailError(msg):
-#     msg = MIMEMultipart()
-#     msg['Subject'] = 'webdev-server.cyanideBot -- error'
-#     msg['From'] = botmail
-#     msg['To'] = devmail
-
-#     text = MIMEText("cyanideBot>>explosmdotnet has bailed with error:\n" + msg)
-#     msg.attach(text)
-
-#     server = smtplib.SMTP('smtp.gmail.com:587')
-#     server.ehlo()
-#     server.starttls()
-#     server.ehlo()
-#     server.login(botmail, password)
-#     server.sendmail(botmail, devmail, msg.as_string())
-#     server.quit()
 
 
 #  Email message to developer
@@ -123,7 +85,6 @@ def GetUrls():
 		return urls
 	except Exception as error:
 		SendMessage("error", error)
-		#EmailError(error)
 		sys.exit()
 
 
@@ -139,11 +100,9 @@ def MakePost(client):
 	try:
 		response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
 		SendMessage("message", response['link'])
-		#EmailNotify(response['link'])
 		sys.exit()
 	except Exception as error:
 		SendMessage("error", error)
-		#EmailError(error)
 		sys.exit()
 
 """ PROGRAM FUNCTIONALITY """
