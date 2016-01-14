@@ -15,6 +15,17 @@ from time import strftime
 from imgurAPIClient import StartClient
 from helpers import get_config
 
+### GNU GENERAL PUBLIC LICENSE
+### Author: cody.rocker.83@gmail.com
+### 2015
+#-----------------------------------
+#   Requires:                    """
+#    - Python 2.7+               """
+#    - imgurpython               """
+#-----------------------------------
+
+""" DEFINES """
+
 #  Retrieve account credentials from config file
 config = get_config()
 config.read('auth.ini')
@@ -24,14 +35,63 @@ password = config.get('credentials', 'password')
 botmail = config.get('credentials', 'botmail')
 devmail = config.get('credentials', 'devmail')
 
+#  Initialize imgurAPIClient
+client = StartClient()
 
-def EmailNotify(link):
+
+#  EmailNotify() && EmailError() can/should be refactored into a single function call
+# #  Email notification message to developer
+# def EmailNotify(link):
+#     msg = MIMEMultipart()
+#     msg['Subject'] = 'webdev-server.cyanideBot -- message'
+#     msg['From'] = botmail
+#     msg['To'] = devmail
+
+#     text = MIMEText("cyanideBot>>explosmdotnet has posted an image to Imgur\n" + link)
+#     msg.attach(text)
+
+#     server = smtplib.SMTP('smtp.gmail.com:587')
+#     server.ehlo()
+#     server.starttls()
+#     server.ehlo()
+#     server.login(botmail, password)
+#     server.sendmail(botmail, devmail, msg.as_string())
+#     server.quit()
+
+
+# #  Email error message to developer
+# def EmailError(msg):
+#     msg = MIMEMultipart()
+#     msg['Subject'] = 'webdev-server.cyanideBot -- error'
+#     msg['From'] = botmail
+#     msg['To'] = devmail
+
+#     text = MIMEText("cyanideBot>>explosmdotnet has bailed with error:\n" + msg)
+#     msg.attach(text)
+
+#     server = smtplib.SMTP('smtp.gmail.com:587')
+#     server.ehlo()
+#     server.starttls()
+#     server.ehlo()
+#     server.login(botmail, password)
+#     server.sendmail(botmail, devmail, msg.as_string())
+#     server.quit()
+
+
+#  Email message to developer
+def SendMessage(MODE, message):
     msg = MIMEMultipart()
-    msg['Subject'] = 'webdev-server.cyanideBot -- message'
     msg['From'] = botmail
     msg['To'] = devmail
 
-    text = MIMEText("cyanideBot>>explosmdotnet has posted an image to Imgur\n" + link)
+    if MODE == "message":
+    	msg['Subject'] = 'webdev-server.cyanideBot -- message'
+    	text = MIMEText("cyanideBot.explosmdotnet posted an image to Imgur\n" + message)
+
+    elif MODE == "error":
+    	msg['Subject'] = 'webdev-server.cyanideBot -- error'
+    	text = MIMEText("cyanideBot.explosmdotnet failed with error:\n" + message)
+    
     msg.attach(text)
 
     server = smtplib.SMTP('smtp.gmail.com:587')
@@ -43,60 +103,50 @@ def EmailNotify(link):
     server.quit()
 
 
-def EmailError(msg):
-    msg = MIMEMultipart()
-    msg['Subject'] = 'webdev-server.cyanideBot -- error'
-    msg['From'] = botmail
-    msg['To'] = devmail
-
-    text = MIMEText("cyanideBot>>explosmdotnet has bailed with error:\n" + msg)
-    msg.attach(text)
-
-    server = smtplib.SMTP('smtp.gmail.com:587')
-    server.ehlo()
-    server.starttls()
-    server.ehlo()
-    server.login(botmail, password)
-    server.sendmail(botmail, devmail, msg.as_string())
-    server.quit()
-
+#  Return formatted date string
 def GetDate():
     return strftime('%b %d %Y')
 
-#  Returns a string containing first regEx match
+
+#  Returns a url dictionary containing regEx matches
 def GetUrls():
-	urls = {}
-	response = urllib2.urlopen('http://explosm.net')
-	html = response.read()
-	urls['imgUrl'] = "http://" + re.findall(r'<img id="featured-comic" src="//(.*?)"/></a>', html)[0]
-	urls['permalinkUrl'] = re.findall(r'<input id="permalink" type="text" value="(.*?)" onclick=', html)[0]
-	urls['hotlinkUrl'] = re.findall(r'<a href="(.*?)"><img id="featured-comic" src="', html)[0]
+	urls = {}  # define in local scope to ensure clean empty dict
 	try:
-		#return "http://" + imgUrl[0], linkUrl[0]
+		response = urllib2.urlopen('http://explosm.net')
+		html = response.read()
+		urls['imgUrl'] = (
+			"http://" + re.findall(r'<img id="featured-comic" src="//(.*?)"/></a>', html)[0])
+		urls['permalinkUrl'] = (
+			re.findall(r'<input id="permalink" type="text" value="(.*?)" onclick=', html)[0])
+		urls['hotlinkUrl'] = (
+			re.findall(r'<a href="(.*?)"><img id="featured-comic" src="', html)[0])
 		return urls
 	except Exception as error:
-		EmailError(error)
+		SendMessage("error", error)
+		#EmailError(error)
 		sys.exit()
 
 
+#  Scrape explosm.net for urls && upload w/ metadata
 def MakePost(client):
 	urls = GetUrls()
-	meta = {}
+	meta = {}  # define in local scope to ensure clean empty dict
 	meta['album'] = None
 	meta['name'] = None
 	meta['title'] = "Daily dose of Cyanide for " + GetDate()
-	meta['description'] = "Todays comic -- " + urls['hotlinkUrl'] + "\nPermalink -- " + urls['permalinkUrl'] + "\nFind more at: http://explosm.net"
+	meta['description'] = "Todays comic -- %s\nPermalink -- %s\nFind more at -- http://explosm.net" % (
+		urls['hotlinkUrl'], urls['permalinkUrl'])
 	try:
 		response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
-		EmailNotify(response['link'])
+		SendMessage("message", response['link'])
+		#EmailNotify(response['link'])
+		sys.exit()
 	except Exception as error:
-		EmailError(error)
+		SendMessage("error", error)
+		#EmailError(error)
 		sys.exit()
 
+""" PROGRAM FUNCTIONALITY """
 
-""" BOT FUNCTIONALITY """
-client = StartClient()
-MakePost(client)
-
-""" TESTING """
-#print GetUrls()
+if __name__ == '__main__':
+	MakePost(client)
