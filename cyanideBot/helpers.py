@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+""" Generic compatiblity helper functions """
 
 
 def get_input(string):

@@ -18,12 +18,14 @@ from helpers import get_config
 
 ### GNU GENERAL PUBLIC LICENSE
 ### Author: cody.rocker.83@gmail.com
-### 2015
+### 2016
 #-----------------------------------
 #   Requires:                    """
-#    - Python 2.7+               """
+#    - Python 2.7                """
 #    - imgurpython               """
 #-----------------------------------
+
+#  TODO -- Add logging
 
 """ DEFINES """
 
@@ -47,13 +49,13 @@ def SendMessage(MODE, message):
     msg['To'] = devmail
 
     if MODE == "message":
-    	msg['Subject'] = 'webdev-server.cyanideBot -- message'
-    	text = MIMEText("cyanideBot.explosmdotnet posted an image to Imgur\n" + message)
+        msg['Subject'] = 'webdev-server.cyanideBot -- message'
+        text = MIMEText("cyanideBot.explosmdotnet posted an image to Imgur\n" + message)
 
     elif MODE == "error":
-    	msg['Subject'] = 'webdev-server.cyanideBot -- error'
-    	text = MIMEText("cyanideBot.explosmdotnet failed with error:\n" + message)
-    
+        msg['Subject'] = 'webdev-server.cyanideBot -- error'
+        text = MIMEText("cyanideBot.explosmdotnet failed with error:\n" + message)
+
     msg.attach(text)
 
     server = smtplib.SMTP('smtp.gmail.com:587')
@@ -72,40 +74,44 @@ def GetDate():
 
 #  Returns a url dictionary containing regEx matches
 def GetUrls():
-	urls = {}  # define in local scope to ensure clean empty dict
-	try:
-		response = urllib2.urlopen('http://explosm.net')
-		html = response.read()
-		urls['imgUrl'] = (
-			"http://" + re.findall(r'<img id="featured-comic" src="//(.*?)"/></a>', html)[0])
-		urls['permalinkUrl'] = (
-			re.findall(r'<input id="permalink" type="text" value="(.*?)" onclick=', html)[0])
-		urls['hotlinkUrl'] = (
-			re.findall(r'<a href="(.*?)"><img id="featured-comic" src="', html)[0])
-		return urls
-	except Exception as error:
-		SendMessage("error", error)
-		sys.exit()
+    urls = {}  # define in local scope to ensure clean empty dict
+    try:
+        response = urllib2.urlopen('http://explosm.net')
+        html = response.read()
+        urls['imgUrl'] = (
+            "http://" + re.findall(r'<img id="featured-comic" src="//(.*?)"/></a>',
+            html)[0])
+        urls['permalinkUrl'] = (
+            re.findall(r'<input id="permalink" type="text" value="(.*?)" onclick=',
+            html)[0])
+        urls['hotlinkUrl'] = (
+            re.findall(r'<a href="(.*?)"><img id="featured-comic" src="',
+            html)[0])
+        return urls
+    except Exception as error:
+        SendMessage("error", error)
+        sys.exit()
 
 
 #  Scrape explosm.net for urls && upload w/ metadata
 def MakePost(client):
-	urls = GetUrls()
-	meta = {}  # define in local scope to ensure clean empty dict
-	meta['album'] = None
-	meta['name'] = None
-	meta['title'] = "Daily dose of Cyanide for " + GetDate()
-	meta['description'] = "Todays comic -- %s\nPermalink -- %s\nFind more at -- http://explosm.net" % (
-		urls['hotlinkUrl'], urls['permalinkUrl'])
-	try:
-		response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
-		SendMessage("message", response['link'])
-		sys.exit()
-	except Exception as error:
-		SendMessage("error", error)
-		sys.exit()
+    urls = GetUrls()
+    meta = {}  # define in local scope to ensure clean empty dict
+    meta['album'] = None
+    meta['name'] = None
+    meta['title'] = "Daily dose of Cyanide for " + GetDate()
+    meta['description'] = (
+        "Todays comic -- %s\nPermalink -- %s\nFind more at -- http://explosm.net" % (
+            urls['hotlinkUrl'], urls['permalinkUrl']))
+    try:
+        response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
+        SendMessage("message", response['link'])
+        sys.exit()
+    except Exception as error:
+        SendMessage("error", error)
+        sys.exit()
 
 """ PROGRAM FUNCTIONALITY """
 
 if __name__ == '__main__':
-	MakePost(client)
+    MakePost(client)

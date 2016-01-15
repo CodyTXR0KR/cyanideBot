@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-
-#from auth import authenticate  # for failed authentication check later
 from helpers import get_config
 from imgurpython import ImgurClient
 
-# Need a check to make sure the refresh_token exists
+""" Returns a client object to handle requests to imgur API """
+
+#  TODO -- Check to make sure the refresh_token exists
+#  TODO -- Handle failed authentication for lost/corrupt config
 
 
 def StartClient():

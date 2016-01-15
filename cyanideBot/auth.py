@@ -3,12 +3,28 @@
 from imgurpython import ImgurClient
 from helpers import get_input, get_config
 
+"""
+
+    This script uses a config (*.ini) file to authorize a new
+    imgur application/account pair and generate Oauth2 tokens.
+
+    The client_ID and client_secret are generated when
+    the app is registered with imgur developer API.
+
+    Documentation >> https://api.imgur.com/
+    Example config >> https://github.com/Imgur/imgurpython/blob/master/examples/auth.ini
+
+    *** THIS MUST BE RUN SUCCESSFULY BEFORE USING MAIN APP ***
+
+"""
+
+#  TODO -- Add functionality to auto-generate the config files (if not found)
+
 
 def authenticate():
     # Get client ID and secret from auth.ini
     config = get_config()
-    # https://github.com/Imgur/imgurpython/blob/master/examples/auth.ini
-    config.read('auth.ini')  # this is the file that holds user credentials
+    config.read('auth.ini')
     client_id = config.get('credentials', 'client_id')
     client_secret = config.get('credentials', 'client_secret')
 
@@ -35,6 +51,5 @@ def authenticate():
 
     return client
 
-# If you want to run this as a standalone script, so be it!
 if __name__ == "__main__":
     authenticate()
