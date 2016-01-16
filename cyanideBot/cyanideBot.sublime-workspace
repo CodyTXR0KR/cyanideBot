@@ -1,0 +1,332 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"e",
+				"except"
+			],
+			[
+				"permal",
+				"permalinkUrl"
+			],
+			[
+				"link",
+				"linkUrl"
+			],
+			[
+				"E",
+				"EmailError"
+			],
+			[
+				"im",
+				"imgUrl"
+			],
+			[
+				"cl",
+				"client"
+			],
+			[
+				"re",
+				"response"
+			],
+			[
+				"Em",
+				"EmailNotify"
+			],
+			[
+				"Get",
+				"GetUrl"
+			],
+			[
+				"to",
+				"toaddr"
+			],
+			[
+				"img",
+				"imgUrl"
+			],
+			[
+				"dev",
+				"devmail"
+			],
+			[
+				"c",
+				"config"
+			],
+			[
+				"login",
+				"login_required"
+			],
+			[
+				"serv",
+				"serverReply"
+			],
+			[
+				"res",
+				"request"
+			],
+			[
+				"pla",
+				"playing"
+			],
+			[
+				"ser",
+				"serverReply"
+			],
+			[
+				"sear",
+				"searchLibrary"
+			],
+			[
+				"gp",
+				"gPlayClient"
+			],
+			[
+				"track",
+				"track_ids"
+			],
+			[
+				"gPl",
+				"gPlayClient"
+			],
+			[
+				"tr",
+				"track_info"
+			],
+			[
+				"trac",
+				"track_id"
+			],
+			[
+				"getT",
+				"getTrackInfo"
+			],
+			[
+				"gP",
+				"gPlayClient"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 294.0,
+		"last_filter": "package Con",
+		"selected_items":
+		[
+			[
+				"package Con",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 349.0
+	},
+	"console":
+	{
+		"height": 116.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/cody/Python/projects/cyanideBot/cyanideBot/helpers.py",
+		"/home/cody/Python/projects/cyanideBot/cyanideBot/imgurAPIClient.py",
+		"/home/cody/Python/projects/cyanideBot/cyanideBot/auth.py",
+		"/home/cody/Python/projects/cyanideBot/cyanideBot/cyanideBot.py",
+		"/home/cody/Python/projects/cyanideBot/cyanideBot/auth.ini",
+		"/home/cody/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/cody/Python/projects/google_dj_server/Google_DJ/gPlayServer.py",
+		"/home/cody/Python/projects/cyanideBot/cyanideBot.py",
+		"/home/cody/Python/projects/cyanideBot/imgurAPIClient.py",
+		"/home/cody/Python/projects/cyanideBot/auth.ini",
+		"/home/cody/Python/projects/cyanideBot/auth.py",
+		"/home/cody/Python/projects/CyanideBot -- Notes",
+		"/home/cody/Python/projects/cyanideBot/helpers.py",
+		"/home/cody/Python/modules/noip2-custom-duc/noip2-custom-duc.py",
+		"/home/cody/Python/modules/py_sms/py_sms.py",
+		"/home/cody/Python/modules/py_sms/py_mms.py",
+		"/home/cody/Python/projects/geronimo/geronimo.py",
+		"/home/cody/UnityProjects/Base-Building_Tutorial/Assets/Controllers/MouseController.cs",
+		"/home/cody/UnityProjects/Base-Building_Tutorial/Assets/Models/InstalledObject.cs",
+		"/home/cody/UnityProjects/3D-Space-Shooter_Tutorial/Assets/Scripts/DestroyByBoundary.cs",
+		"/home/cody/UnityProjects/3D-Space-Shooter_Tutorial/Assets/Scripts/DestroyByContact.cs",
+		"/home/cody/UnityProjects/3D-Space-Shooter_Tutorial/Assets/Scripts/DestroyByTime.cs",
+		"/home/cody/UnityProjects/3D-Space-Shooter_Tutorial/Assets/Scripts/GameController.cs",
+		"/home/cody/UnityProjects/3D-Space-Shooter_Tutorial/Assets/Scripts/RandomRotation.cs",
+		"/home/cody/UnityProjects/3D-Space-Shooter_Tutorial/Assets/Scripts/Mover.cs",
+		"/home/cody/UnityProjects/3D-Space-Shooter_Tutorial/Assets/Scripts/PlayerController.cs",
+		"/home/cody/UnityProjects/3D-Space-Shooter_Tutorial/3D-Space-Shooter_Tutorial.sln",
+		"/run/user/1001/gvfs/sftp:host=devhost.ddns.net,port=25000/var/www/FlaskApp/FlaskApp/templates/donate.html",
+		"/run/user/1001/gvfs/sftp:host=devhost.ddns.net,port=25000/var/www/FlaskApp/FlaskApp/templates/Space-Shooter.html",
+		"/run/user/1001/gvfs/sftp:host=devhost.ddns.net,port=25000/var/www/FlaskApp/FlaskApp/__init__.py",
+		"/home/cody/Downloads/Project Porcupine - Ep 006/Assets/Controllers/MouseController.cs",
+		"/home/cody/UnityProjects/Base-Building-Tutorial/Assets/Models/Tile.cs",
+		"/home/cody/Downloads/Project Porcupine - Ep 006/Assets/Controllers/WorldController.cs",
+		"/home/cody/UnityProjects/Base-Building-Tutorial/Assets/Models/World.cs",
+		"/home/cody/.conkyrc",
+		"/home/cody/UnityProjects/Base-Building-Tutorial/Assets/Scripts/TestMonoDevelop.cs",
+		"/home/cody/Python/projects/google_dj_server/Google_DJ/gPlayClient.py",
+		"/home/cody/Python/projects/google_dj_server/Google_DJ/gStreamer.py",
+		"/home/cody/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/cody/Documents/MovieList.txt",
+		"/home/cody/Desktop/sublime-text-3_license.txt",
+		"/run/user/1001/gvfs/sftp:host=devhost.ddns.net,port=25000/var/www/FlaskApp/FlaskApp/templates/homepage.html",
+		"/run/user/1001/gvfs/sftp:host=devhost.ddns.net,port=25000/var/www/FlaskApp/FlaskApp/templates/library.html",
+		"/run/user/1001/gvfs/sftp:host=devhost.ddns.net,port=25000/var/www/FlaskApp/FlaskApp/templates/reference.html",
+		"/run/user/1001/gvfs/sftp:host=devhost.ddns.net,port=25000/var/www/FlaskApp/FlaskApp/content_manager.py",
+		"/home/cody/Python/modules/py_sms/carriers.txt",
+		"/home/cody/Python/projects/FlaskAppFramework/FlaskApp/templates/reference.html",
+		"/home/cody/Python/projects/FlaskAppFramework/FlaskApp/__init__.py",
+		"/home/cody/Python/projects/FlaskAppFramework/FlaskApp/templates/library.html",
+		"/home/cody/Python/projects/FlaskAppFramework/FlaskApp/templates/media_player.html",
+		"/home/cody/Python/projects/FlaskAppFramework/FlaskApp/templates/header.html",
+		"/home/cody/.local/share/applications/binding-of-isaac-rebirth.desktop",
+		"/home/cody/.local/share/applications/Terraria.desktop",
+		"/home/cody/Desktop/missing_music_artists.txt",
+		"/home/cody/Desktop/ituneslibrary.txt",
+		"/home/cody/.config/sublime-text-3/Packages/User/Distraction Free.sublime-settings",
+		"/home/cody/Python/projects/google_dj_server/Google_DJ/color_output.py"
+	],
+	"find":
+	{
+		"height": 21.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"searchLibrary",
+			"getTrackInfo"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 21.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "cyanideBot.sublime-project",
+	"replace":
+	{
+		"height": 38.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 116.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

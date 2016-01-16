@@ -101,8 +101,8 @@ def MakePost(client):
     meta['name'] = None
     meta['title'] = "Daily dose of Cyanide for " + GetDate()
     meta['description'] = (
-        "Todays comic -- %s\nPermalink -- %s\nFind more at -- http://explosm.net" % (
-            urls['hotlinkUrl'], urls['permalinkUrl']))
+        "Permalink -- %s\nFind more at -- http://explosm.net" % (
+            urls['permalinkUrl']))
     try:
         response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
         SendMessage("message", response['link'])
