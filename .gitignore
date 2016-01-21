@@ -59,6 +59,3 @@ target/
 # Config Files (credentials/security)
 # empty default auth.ini included with repo
 *.ini
-
-# SublimeText stuff
-*.sublime-workspace
