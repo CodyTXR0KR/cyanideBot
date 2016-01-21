@@ -57,5 +57,5 @@ docs/_build/
 target/
 
 # Config Files (credentials/security)
-# empty default auth.ini included with repo
 *.ini
+client_secret.json
