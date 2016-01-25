@@ -57,5 +57,6 @@ docs/_build/
 target/
 
 # Config Files (credentials/security)
-*.ini
+auth.ini
 client_secret.json
+api_keys/

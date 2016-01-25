@@ -54,7 +54,7 @@ def SendMessage(MODE, message):
 
     elif MODE == "error":
         msg['Subject'] = 'webdev-server.cyanideBot -- error'
-        text = MIMEText("cyanideBot.explosmdotnet failed with error:\n" + message)
+        text = MIMEText("cyanideBot.explosmdotnet failed with error:\n" + str(message))
 
     msg.attach(text)
 
@@ -103,15 +103,50 @@ def MakePost(client):
     meta['description'] = (
         "Permalink -- %s\nFind more at -- http://explosm.net" % (
             urls['permalinkUrl']))
+    
     try:
-        response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
-        SendMessage("message", response['link'])
+        print (('>> Uploading image...'))
+        upload_response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
+        print (('>> New image uploaded successfuly.'))
+        item_id = upload_response['id']
+        title = upload_response['title']
+
+        try:
+            print (('   ...publishing to gallery'))
+            publish_response = client.share_on_imgur(item_id, title)
+            print (('>> Image published to gallery,'))
+
+            try:
+                print(('   ...tagging image'))
+                tag = 'cr4sh0verride'
+                tag_response = client.gallery_tag_image(tag, item_id)
+                print (('>> Image tagged: [%s]' % (tag)))
+
+            except Exception as error:
+                print (('>> ERROR -- Failed to tag.'))
+                print (('\t -- %s' % (str(error))))
+                print (('\nquitting...'))
+                sys.exit()
+            
+        except Exception as error:
+            print (('>> ERROR -- Failed to publish.'))
+            print (('\t -- %s' % (str(error))))
+            print (('\nquitting...'))
+            sys.exit()
+        
+        print ('>> New image posted, tagged and shared successfully.')
+        print ('\t -- <%s>' % (upload_response['link']))
+        SendMessage("message", upload_response['link'])
         sys.exit()
+
     except Exception as error:
-        SendMessage("error", error)
+        print (('>> ERROR -- Failed to upload.'))
+        print (('\t -- %s' % (str(error))))
+        print (('\nquitting...'))
         sys.exit()
 
 """ PROGRAM FUNCTIONALITY """
 
 if __name__ == '__main__':
+    print (('\n>> Running cyanideBot'))
     MakePost(client)
