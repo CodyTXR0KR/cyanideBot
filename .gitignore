@@ -60,3 +60,4 @@ target/
 auth.ini
 client_secret.json
 api_keys/
+config/

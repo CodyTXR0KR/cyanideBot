@@ -31,7 +31,7 @@ from helpers import get_config
 
 #  Retrieve account credentials from config file
 config = get_config()
-config.read('auth.ini')
+config.read('config/auth.ini')
 password = config.get('credentials', 'password')
 
 #  Message handler settings (errors/confirmations sent to dev email)
@@ -107,7 +107,7 @@ def MakePost(client):
     try:
         print (('>> Uploading image...'))
         upload_response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
-        print (('>> New image uploaded successfuly.'))
+        print (('>> New image uploaded successfuly,'))
         item_id = upload_response['id']
         title = upload_response['title']
 
@@ -135,7 +135,7 @@ def MakePost(client):
             sys.exit()
         
         print ('>> New image posted, tagged and shared successfully.')
-        print ('\t -- <%s>' % (upload_response['link']))
+        print ('   -- <%s> --\n' % (upload_response['link']))
         SendMessage("message", upload_response['link'])
         sys.exit()
 
