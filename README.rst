@@ -25,7 +25,7 @@ continue reading...
 	$ pip install imgurpython
 
 	# clone repository
-	$ git clone https://github.com/CodyTXR0KR/cyanide_bot
+	$ git clone https://github.com/CodyTXR0KR/cyanideBot
 
 Getting started
 ---------------
@@ -37,7 +37,7 @@ Configure your bot:
 
 .. code-block:: bash
 	
-	# navigate to cyanide bot directory
+	# navigate to project directory
 	$ cd /path/to/cyanide_bot
 
 	# take ownership of the project
@@ -51,7 +51,7 @@ Configure your bot:
 	#     - README.rst
 	#     - config/
 	#         - auth.ini
-	#     - cyanide_bot/
+	#     - cyanideBot/
 	#         - auth.py
 	#         - cyanideBot.py
 	#         - helpers.py
@@ -64,7 +64,7 @@ Configure your bot:
 	# edit config file
 	$ nano config/auth.ini
 
-	# make the config mirror the following, substituting your own values:
+	# make the config mirror the following:
 	[credentials]
 	client_id = your_client_id
 	client_secret = your_client_secret
@@ -76,7 +76,7 @@ Configure your bot:
 	# authorize your bot with your imgur acct,
 	# or create and sign into an acct specifically
 	# for the bot before proceeding.
-	$ python cyanide_bot/auth.py
+	$ python cyanideBot/auth.py
 
 	# follow the prompts to generate your refresh token
 	# you may want to backup your config at this point.
@@ -86,10 +86,10 @@ Run your bot:
 .. code-block:: bash
 
 	# if you're not already in the bot dir
-	$ cd path/to/cyanide_bot
+	$ cd path/to/cyanideBot
 
 	# from the top level of the project
-	$ ./cyanide_bot/cyanideBot.py
+	$ ./cyanideBot/cyanideBot.py
 
 If you run into trouble feel free to email the developer_. 
 
