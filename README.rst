@@ -37,14 +37,14 @@ Configure your bot:
 
 .. code-block:: bash
 	
-	# navigate to cyanide bot directory
-	$ cd /path/to/cyanideBot
+	# navigate to project directory
+	$ cd /path/to/cyanide_bot
 
 	# take ownership of the project
-	$ sudo chown [user] cyanideBot
+	$ sudo chown [user] cyanide_bot
 
 	# generate configuration directory
-	# - cyanideBot/
+	# - cyanide_bot/
 	#     - .git/
 	#     - .gitignore
 	#     - LICENSE
