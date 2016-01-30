@@ -1,4 +1,4 @@
-cyanideBot 
+cyanide_bot 
 ==========
 <http://imgur.com/user/explosmdotnet>
 
