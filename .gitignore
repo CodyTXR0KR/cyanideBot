@@ -56,6 +56,6 @@ docs/_build/
 # PyBuilder
 target/
 
-# Config Files (credentials/security)
+# Credentials/security)
 api_keys/
 config/
