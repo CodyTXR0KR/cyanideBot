@@ -5,7 +5,9 @@ cyanideBot
 :Developer:
 	Cody Rocker
 :License:
-	GNU/GPLv2 -- 2016
+	GNU/GPLv2
+:Date:
+	2016
 
 - **Requirements**
 	+ Python 2.7
