@@ -9,6 +9,8 @@ TODO Next
 
 - Comply with one function = one reponsibility principal
 
+- Write some useful unit tests
+
 **in no particular order**
 
 - Add command line script with argparser

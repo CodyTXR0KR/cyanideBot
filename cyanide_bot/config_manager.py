@@ -12,7 +12,7 @@
 #-----------------------------------
 import os
 
-APPLICATION_NAME = "CyanideBot"
+APPLICATION_NAME = "cyanide-bot"
 CONFIG_DIR = os.path.join(os.path.expanduser('~'), '.config')
 CONFIG_PATH = os.path.join(CONFIG_DIR, APPLICATION_NAME)
 
