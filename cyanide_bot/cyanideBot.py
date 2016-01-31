@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import os
 import sys
 import urllib2
 import re
@@ -29,9 +30,12 @@ from helpers import get_config
 
 """ DEFINES """
 
+API_KEY_DIR = os.path.join(os.path.dirname(__file__), 'api_keys')
+CONFIG_DIR = os.path.join(os.path.dirname(__file__), 'config')
+
 #  Retrieve account credentials from config file
 config = get_config()
-config.read('config/auth.ini')
+config.read(os.path.join(CONFIG_DIR, 'auth.ini'))
 password = config.get('credentials', 'password')
 
 #  Message handler settings (errors/confirmations sent to dev email)

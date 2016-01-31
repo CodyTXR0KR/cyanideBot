@@ -1,5 +1,5 @@
 cyanide_bot 
-==========
+===========
 <http://imgur.com/user/explosmdotnet>
 
 :Developer:
@@ -57,7 +57,6 @@ Configure your bot:
 	#         - helpers.py
 	#         - imgurAPIClient.py
 	#     - images/
-
 	$ mkdir -p config
 	$ touch config/auth.ini
 
