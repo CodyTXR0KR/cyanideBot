@@ -14,36 +14,17 @@ from imgurpython import ImgurClient
 from config_manager import load_config, write_config
 from helpers import get_input
 
-"""
 
-    This script uses a config (*.ini) file to authorize a new
-    imgur application/account pair and generate Oauth2 tokens.
-
-    The client_ID and client_secret are generated when
-    the app is registered with imgur developer API.
-
-    Documentation >> https://api.imgur.com/
-    Example config >> https://github.com/Imgur/imgurpython/blob/master/examples/auth.ini
-
-"""
-
-#  TODO -- Add functionality to auto-generate the config files (if not found)
-
-
+# This only needs to run to set-up the bot,
+# or generate new tokens if they are lost.
 def authenticate():
-    # Get client ID and secret from auth.ini
     config = load_config('bot_settings.ini')
     client_id = config.get('credentials', 'client_id')
     client_secret = config.get('credentials', 'client_secret')
-
     client = ImgurClient(client_id, client_secret)
-
-    # Authorization flow, pin example (see docs for other auth types)
     authorization_url = client.get_auth_url('pin')
 
     print (("\nGo to the following URL: {0}".format(authorization_url)))
-
-    # Read in the pin, handle Python 2 or 3 here.
     pin = get_input("Enter pin code: ")
 
     # ... redirect user to `authorization_url`, obtain pin (or code or token) ...

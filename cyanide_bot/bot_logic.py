@@ -93,10 +93,10 @@ def get_urls():
         sys.exit()
 
 
-#  Scrape explosm.net for urls && upload w/ metadata
+#  This needs to be broken into several smaller funtions
 def make_post(client):
     urls = get_urls()
-    meta = {}  # define in local scope to ensure clean empty dict
+    meta = {}
     meta['album'] = None
     meta['name'] = None
     meta['title'] = "Daily dose of Cyanide for " + GetDate()
