@@ -1,7 +1,18 @@
 # -*- coding: utf-8 -*-
 
+### cyanide_bot
+### GNU/GPL v2
+### Author: Cody Rocker
+### Author_email: cody.rocker.83@gmail.com
+### 2016
+#-----------------------------------
+#   Requires:                    """
+#    - Python 2.7                """
+#    - imgurpython               """
+#-----------------------------------
 from imgurpython import ImgurClient
-from helpers import get_input, get_config
+from config_manager import load_config, write_config
+from helpers import get_input
 
 """
 
@@ -14,8 +25,6 @@ from helpers import get_input, get_config
     Documentation >> https://api.imgur.com/
     Example config >> https://github.com/Imgur/imgurpython/blob/master/examples/auth.ini
 
-    *** THIS MUST BE RUN SUCCESSFULY BEFORE USING MAIN APP ***
-
 """
 
 #  TODO -- Add functionality to auto-generate the config files (if not found)
@@ -23,8 +32,7 @@ from helpers import get_input, get_config
 
 def authenticate():
     # Get client ID and secret from auth.ini
-    config = get_config()
-    config.read('auth.ini')
+    config = load_config('bot_settings.ini')
     client_id = config.get('credentials', 'client_id')
     client_secret = config.get('credentials', 'client_secret')
 
@@ -33,7 +41,7 @@ def authenticate():
     # Authorization flow, pin example (see docs for other auth types)
     authorization_url = client.get_auth_url('pin')
 
-    print (("Go to the following URL: {0}".format(authorization_url)))
+    print (("\nGo to the following URL: {0}".format(authorization_url)))
 
     # Read in the pin, handle Python 2 or 3 here.
     pin = get_input("Enter pin code: ")
@@ -42,14 +50,10 @@ def authenticate():
     credentials = client.authorize(pin, 'pin')
     client.set_user_auth(credentials['access_token'], credentials['refresh_token'])
     config.set('credentials', 'refresh_token', credentials['refresh_token'])
-    with open('auth.ini', 'w') as configfile:    # save
-        config.write(configfile)
+    write_config(config, 'bot_settings.ini')
 
     print ("Authentication successful! Here are the details:")
     print (("   Access token:  {0}".format(credentials['access_token'])))
     print (("   Refresh token: {0}".format(credentials['refresh_token'])))
 
     return client
-
-if __name__ == "__main__":
-    authenticate()

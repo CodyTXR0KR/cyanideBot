@@ -1,4 +1,15 @@
 # -*- coding: utf-8 -*-
+
+### cyanide_bot
+### GNU/GPL v2
+### Author: Cody Rocker
+### Author_email: cody.rocker.83@gmail.com
+### 2016
+#-----------------------------------
+#   Requires:                    """
+#    - Python 2.7                """
+#    - imgurpython               """
+#-----------------------------------
 """ Generic compatiblity helper functions """
 
 
@@ -8,13 +19,3 @@ def get_input(string):
         return raw_input(string)
     except:
         return input(string)
-
-
-def get_config():
-    ''' Create a config parser for reading INI files '''
-    try:
-        import ConfigParser
-        return ConfigParser.ConfigParser()
-    except:
-        import configparser
-        return configparser.ConfigParser()

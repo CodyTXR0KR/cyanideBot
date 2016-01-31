@@ -1,10 +1,22 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
+### cyanide_bot
+### GNU/GPL v2
+### Author: Cody Rocker
+### Author_email: cody.rocker.83@gmail.com
+### 2016
+#-----------------------------------
+#   Requires:                    """
+#    - Python 2.7                """
+#    - imgurpython               """
+#-----------------------------------
 import os
 import sys
 import urllib2
 import re
 import smtplib
+import keyring
 
 # Email dependancies
 from email.mime.text import MIMEText
@@ -14,40 +26,24 @@ from time import strftime
 
 # Requires Imgur's Python api to be installed. >> https://github.com/Imgur/imgurpython
 # Documentation >> https://api.imgur.com/
-from imgurAPIClient import StartClient
-from helpers import get_config
+from imgur_api_client import Client
+from config_manager import load_config
 
-### GNU GENERAL PUBLIC LICENSE
-### Author: cody.rocker.83@gmail.com
-### 2016
-#-----------------------------------
-#   Requires:                    """
-#    - Python 2.7                """
-#    - imgurpython               """
-#-----------------------------------
 
-#  TODO -- Add logging
-
-""" DEFINES """
-
-API_KEY_DIR = os.path.join(os.path.dirname(__file__), 'api_keys')
-CONFIG_DIR = os.path.join(os.path.dirname(__file__), 'config')
-
-#  Retrieve account credentials from config file
-config = get_config()
-config.read(os.path.join(CONFIG_DIR, 'auth.ini'))
-password = config.get('credentials', 'password')
-
-#  Message handler settings (errors/confirmations sent to dev email)
-botmail = config.get('credentials', 'botmail')
-devmail = config.get('credentials', 'devmail')
-
-#  Initialize imgurAPIClient
-client = StartClient()
+def load_settings():
+    config = load_config('bot_settings.ini')
+    global botmail
+    botmail = config.get('messaging', 'botmail')
+    global devmail
+    devmail = config.get('messaging', 'devmail')
+    global password
+    password = keyring.get_password('cyanide_bot', 'botmail')
+    print password
 
 
 #  Email message to developer
-def SendMessage(MODE, message):
+def send_message(MODE, message):
+    load_settings()
     msg = MIMEMultipart()
     msg['From'] = botmail
     msg['To'] = devmail
@@ -72,12 +68,12 @@ def SendMessage(MODE, message):
 
 
 #  Return formatted date string
-def GetDate():
+def get_date():
     return strftime('%b %d %Y')
 
 
 #  Returns a url dictionary containing regEx matches
-def GetUrls():
+def get_urls():
     urls = {}  # define in local scope to ensure clean empty dict
     try:
         response = urllib2.urlopen('http://explosm.net')
@@ -93,13 +89,13 @@ def GetUrls():
             html)[0])
         return urls
     except Exception as error:
-        SendMessage("error", error)
+        send_message("error", error)
         sys.exit()
 
 
 #  Scrape explosm.net for urls && upload w/ metadata
-def MakePost(client):
-    urls = GetUrls()
+def make_post(client):
+    urls = get_urls()
     meta = {}  # define in local scope to ensure clean empty dict
     meta['album'] = None
     meta['name'] = None
@@ -140,7 +136,7 @@ def MakePost(client):
         
         print ('>> New image posted, tagged and shared successfully.')
         print ('   -- <%s> --\n' % (upload_response['link']))
-        SendMessage("message", upload_response['link'])
+        send_message("message", upload_response['link'])
         sys.exit()
 
     except Exception as error:
@@ -149,8 +145,11 @@ def MakePost(client):
         print (('\nquitting...'))
         sys.exit()
 
-""" PROGRAM FUNCTIONALITY """
+
+def run():
+    # print('>> Bot functionality would run now...')
+    # send_message('message', 'Test')
+    make_post(Client().start())
 
 if __name__ == '__main__':
-    print (('\n>> Running cyanideBot'))
-    MakePost(client)
+    run()
