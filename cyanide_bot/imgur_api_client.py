@@ -14,15 +14,15 @@ from imgurpython import ImgurClient
 
 
 class Client:
-	""" Returns a client object to handle requests to imgur API """
+    """ Returns a client object to handle requests to imgur API """
 
-	def __init__(self, static):
-		config = static.get_bot_settings()
-		self.client_id = config.get('credentials', 'client_id')
-		self.client_secret = config.get('credentials', 'client_secret')
-		self.refresh_token = config.get('credentials', 'refresh_token')
+    def __init__(self, static):
+        config = static.get_bot_settings()
+        self.client_id = config.get('credentials', 'client_id')
+        self.client_secret = config.get('credentials', 'client_secret')
+        self.refresh_token = config.get('credentials', 'refresh_token')
 
-	def login(self):
-	    client = ImgurClient(
-	    	self.client_id, self.client_secret, None, self.refresh_token)
-	    return client
+    def login(self):
+        client = ImgurClient(
+            self.client_id, self.client_secret, None, self.refresh_token)
+        return client

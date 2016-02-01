@@ -18,12 +18,13 @@ from .bot_logic import ImgurBot
 
 _static = StaticInterface()
 
+
 def main():
-	cyanide_bot = ImgurBot(_static)
+    cyanide_bot = ImgurBot(_static)
 
 if __name__ == '__main__':
-	try:
-		main()
-		_static.debug.log('cyanide-bot executed successfully.\n')
-	except KeyboardInterrupt:
-		sys.exit()
+    try:
+        main()
+        _static.debug.log('cyanide-bot executed successfully.\n')
+    except KeyboardInterrupt:
+        sys.exit()

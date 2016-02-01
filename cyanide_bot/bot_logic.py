@@ -10,9 +10,10 @@
 #    - Python 3                  """
 #    - imgurpython               """
 #-----------------------------------
-import os
 import sys
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 import re
 import smtplib
 import keyring
@@ -35,7 +36,6 @@ class ImgurBot():
         self.client = Client(static).login()
         self.debug.log('ImgurBot successfuly initialized.')
 
-
     def load_settings(self):
         self.debug.log('ImgurBot.load_settings()')
         config = self.static.get_bot_settings()
@@ -46,7 +46,7 @@ class ImgurBot():
     #  Email message to developer
     def send_message(self, MODE, message):
         self.debug.log('ImgurBot.send_message() :: sending %s...' % MODE)
-        if messaging_enabled: 
+        if self.messaging_enabled:
             msg = MIMEMultipart()
             msg['From'] = self.botmail
             msg['To'] = self.devmail
@@ -54,12 +54,12 @@ class ImgurBot():
             if MODE == "message":
                 msg['Subject'] = 'webdev-server.cyanideBot -- message'
                 text = MIMEText(
-                    'cyanideBot.explosmdotnet posted an image to Imgur\n' \
+                    'cyanideBot.explosmdotnet posted an image to Imgur\n'
                     '%s' % message)
             elif MODE == "error":
                 msg['Subject'] = 'webdev-server.cyanideBot -- error'
                 text = MIMEText(
-                    'cyanideBot.explosmdotnet failed with error:\n' \
+                    'cyanideBot.explosmdotnet failed with error:\n'
                     '%s' % str(message))
             msg.attach(text)
             try:
@@ -78,11 +78,11 @@ class ImgurBot():
             self.debug.log('ImgurBot.send_message() :: %s sent.' % MODE)
         else:
             self.debug.log('ImgurBot.send_message() :: messaging disabled.')
-     
+
     ###==========================================================###
     ### -- CYANIDE-BOT functions                                 ###
     ### -- This is where specific behaviors should be modified.  ###
-    ###==========================================================### 
+    ###==========================================================###
 
     def get_urls(self):
         self.debug.log('ImgurBot.get_urls()')
@@ -93,17 +93,17 @@ class ImgurBot():
             html = response.read()
 
             urls['imgUrl'] = 'http://{0}'.format(re.findall(
-                b'<img id="featured-comic" src="//(.*?)"/></a>', 
+                b'<img id="featured-comic" src="//(.*?)"/></a>',
                     html)[0].decode('utf-8'))
             self.debug.log('Image Url: %s' % urls['imgUrl'])
 
             urls['permalinkUrl'] = re.findall(
-                b'<input id="permalink" type="text" value="(.*?)" onclick=', 
+                b'<input id="permalink" type="text" value="(.*?)" onclick=',
                     html)[0].decode('utf-8')
             self.debug.log('Permalink Url: %s' % urls['permalinkUrl'])
 
             urls['hotlinkUrl'] = re.findall(
-                b'<a href="(.*?)"><img id="featured-comic" src="', 
+                b'<a href="(.*?)"><img id="featured-comic" src="',
                     html)[0].decode('utf-8')
             self.debug.log('Hotlink Url: %s' % urls['hotlinkUrl'])
             return urls
@@ -126,19 +126,20 @@ class ImgurBot():
             'Permalink -- %s\nFind more at -- http://explosm.net' % (
                 urls['permalinkUrl']))
 
-        try: # imgur_api functionality
+        try:  # imgur_api functionality
             upload_response = self.upload_from_url(urls['imgUrl'], meta)
             if publish:
-                publish_to_gallery(upload_response['item_id'], upload_response['title'])
+                self.publish_to_gallery(
+                    upload_response['item_id'], upload_response['title'])
             if tag_image:
                 if tag is not '':
                     tag_image(tag, upload_response['item_id'])
-        
+
         except Exception as error:
             self.send_message('error', error)
             self.debug.log_error('ImgurBot.make_post() :: Failed.', error)
             sys.exit()
-        
+
         self.send_message('message', upload_response['link'])
         self.debug.log('ImgurBot.make_post() :: Complete.')
 

@@ -17,8 +17,8 @@ from nose.tools import *
 
 class BotLogicTests(unittest.TestCase):
 
-	def setUp(self):
-		pass
+    def setUp(self):
+        pass
 
 if __name__ == '__main__':
-	unittest.main()
+    unittest.main()

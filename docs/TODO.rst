@@ -15,12 +15,6 @@ TODO Next
 
   + `KeyboardInterrupts broken, poor validation, etc.`
 
-- Break up make_post() into smaller, simpler functions
-	
-  + `too many nested statements\too much logic for one function`
-
 - Add checks throughout code for invalid/missing configurations
 	
   + `right now only checking if the files EXIST on __init__`
-
-- Add/improve console and txt file logging

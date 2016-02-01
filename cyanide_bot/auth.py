@@ -19,17 +19,19 @@ from .helpers import get_input
 def authenticate(settings):
     client_id = settings.get('credentials', 'client_id')
     client_secret = settings.get('credentials', 'client_secret')
-    
+
     client = ImgurClient(client_id, client_secret)
     authorization_url = client.get_auth_url('pin')
 
     print(("\nGo to the following URL: {0}".format(authorization_url)))
     pin = get_input("Enter pin code: ")
 
-    # ... redirect user to `authorization_url`, obtain pin (or code or token) ...
+    # ... redirect user to `authorization_url`,
+    # obtain pin (or code or token) ...
     credentials = client.authorize(pin, 'pin')
-    client.set_user_auth(credentials['access_token'], credentials['refresh_token'])
-    
+    client.set_user_auth(
+        credentials['access_token'], credentials['refresh_token'])
+
     settings.set('credentials', 'refresh_token', credentials['refresh_token'])
 
     print(("Authentication successful! Here are the details:"))

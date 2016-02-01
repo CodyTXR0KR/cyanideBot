@@ -37,9 +37,11 @@ class ConfigManager():
 
     def write_config(self, config_instance, config_file):
         try:  # try to write to directory, or
-            with open(os.path.join(self.config_path, config_file), 'w') as configFile:
-                config_instance.write(configFile)
+            with open(os.path.join(
+                self.config_path, config_file), 'w') as configFile:
+                    config_instance.write(configFile)
         except:  # create the directory, if necessary
             os.mkdir(self.config_path)
-            with open(os.path.join(self.config_path, config_file), 'w') as configFile:
-                config_instance.write(configFile)
+            with open(os.path.join(
+                self.config_path, config_file), 'w') as configFile:
+                    config_instance.write(configFile)
