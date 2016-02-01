@@ -127,13 +127,16 @@ class ImgurBot():
                 urls['permalinkUrl']))
 
         try:  # imgur_api functionality
+            # Perform upload action from provided url
             upload_response = self.upload_from_url(urls['imgUrl'], meta)
             if publish:
+                # Publish image to gallery if -p, --publish is true
                 self.publish_to_gallery(
                     upload_response['item_id'], upload_response['title'])
             if tag_image:
                 if tag is not '':
-                    tag_image(tag, upload_response['item_id'])
+                    # Tag the image with user defined tag
+                    self.tag_image(tag, upload_response['item_id'])
 
         except Exception as error:
             self.send_message('error', error)

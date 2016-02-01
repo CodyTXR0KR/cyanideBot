@@ -43,9 +43,11 @@ def main(args):
 		_static.debug.log('running bot_logic functionality...')
 		if args.tag is not None:
 			if args.publish: # publish option must be true to tag an upload
-				cyanide_bot.make_post(publish=args.publish, tag_image=True, tag=args.tag[0])
+				cyanide_bot.make_post(publish=args.publish, 
+                    tag_image=True, tag=args.tag[0])
 			else:
-				_static.debug.log('-p, --publish option must be passed to tag an upload. Operation aborted')
+				_static.debug.log('-p, --publish option must be passed to tag '
+                    'an upload. Operation aborted')
 		else:
 			cyanide_bot.make_post(publish=args.publish)
 
