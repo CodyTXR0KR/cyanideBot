@@ -36,11 +36,11 @@ def parse_args():
 
 def main(args):
 	if args.config:
-		_static.debug.log('running cyanide-bot configuration...')
+		_static.debug.log('Running cyanide-bot configuration...')
 		first_run(_static)
 	else:
 		cyanide_bot = ImgurBot(_static)
-		_static.debug.log('running bot_logic functionality...')
+		_static.debug.log('Running bot_logic functionality...')
 		if args.tag is not None:
 			if args.publish: # publish option must be true to tag an upload
 				cyanide_bot.make_post(publish=args.publish, 

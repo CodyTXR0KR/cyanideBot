@@ -20,10 +20,10 @@ from .auth import authenticate
 
 def first_run(static):
     debug = static.debugger()
-    print(('\n** Take a moment to configure CyanideBot **'))
-    print(('\nYou can reconfigure at any time by passing the argument '
-           '--config\nor manually editing the config files '
-           '(~/.config/CyanideBot)'))
+    print('\n** Take a moment to configure CyanideBot **')
+    print('''\nYou can reconfigure at any time by passing the argument
+           --config\nor manually editing the config files
+           (~/.config/CyanideBot)''')
 
     settings = static.get_bot_settings()
 
@@ -71,9 +71,9 @@ def set_messaging(settings):
 
 
 def register_application(settings):
-    print('\nVisit <https://api.imgur.com/oauth2/addclient> to register bot '
-          'with\nimgur API. Make note of the client_id and client_secret you '
-          'are assigned')
+    print('''\nVisit <https://api.imgur.com/oauth2/addclient> to register bot
+          with\nimgur API. Make note of the client_id and client_secret you
+          are assigned''')
     try:
         client_id = get_input('Client ID: ')
         client_secret = get_input('Client Secret: ')

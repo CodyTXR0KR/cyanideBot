@@ -67,7 +67,7 @@ Run cyanide-bot
 	# to look through the available command line options
 
 All the functional `bot logic` is located in the ``cyanide_bot\cyanide_bot\bot_logic.py`` module.
-If you will be modifying the code please respect Imgurs API rules and TOS, so you don;t ruin it for the rest of us.
+If you will be modifying the code please respect Imgurs API rules and TOS, so you don't ruin it for the rest of us.
 
 --------------------
 

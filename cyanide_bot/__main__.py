@@ -12,19 +12,49 @@
 #    - imgurpython               """
 #-----------------------------------
 import sys
+import argparse
 
 from .static import StaticInterface
 from .bot_logic import ImgurBot
+from .bot_settings import first_run
 
 _static = StaticInterface()
 
 
-def main():
-    cyanide_bot = ImgurBot(_static)
+def parse_args():
+    desc = ('imgur user bot that posts current cyanide and happiness comics')
+    parser = argparse.ArgumentParser(description = desc,
+        formatter_class = argparse.RawTextHelpFormatter)
+    parser.add_argument('-c', '--config', action = 'store_true',
+        help = 'run cyanide-bot configuration.')
+    parser.add_argument('-p', '--publish', action = 'store_true',
+        help = 'publish image to gallery.')
+    parser.add_argument('-t', '--tag', nargs = 1,
+        help = 'tag an image that has been published.\npublish must be true.')
+    args = parser.parse_args()
+    return args
+
+def main(args):
+    if args.config:
+        _static.debug.log('Running cyanide-bot configuration...')
+        first_run(_static)
+    else:
+        cyanide_bot = ImgurBot(_static)
+        _static.debug.log('Running bot_logic functionality...')
+        if args.tag is not None:
+            if args.publish: # publish option must be true to tag an upload
+                cyanide_bot.make_post(publish=args.publish, 
+                    tag_image=True, tag=args.tag[0])
+            else:
+                _static.debug.log('-p, --publish option must be passed to tag '
+                    'an upload. Operation aborted')
+        else:
+            cyanide_bot.make_post(publish=args.publish)
 
 if __name__ == '__main__':
+    args = parse_args()
     try:
-        main()
+        main(args)
         _static.debug.log('cyanide-bot executed successfully.\n')
     except KeyboardInterrupt:
         sys.exit()
