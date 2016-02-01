@@ -7,23 +7,22 @@
 ### 2016
 #-----------------------------------
 #   Requires:                    """
-#    - Python 2.7                """
+#    - Python 3                  """
 #    - imgurpython               """
 #-----------------------------------
-from config_manager import load_config
 from imgurpython import ImgurClient
 
 
 class Client:
 	""" Returns a client object to handle requests to imgur API """
 
-	def __init__(self):
-		config = load_config('imgur_api_keys.ini')
+	def __init__(self, static):
+		config = static.get_bot_settings()
 		self.client_id = config.get('credentials', 'client_id')
 		self.client_secret = config.get('credentials', 'client_secret')
 		self.refresh_token = config.get('credentials', 'refresh_token')
 
-	def start(self):
+	def login(self):
 	    client = ImgurClient(
 	    	self.client_id, self.client_secret, None, self.refresh_token)
 	    return client

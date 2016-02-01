@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 ### cyanide_bot
@@ -8,12 +7,12 @@
 ### 2016
 #-----------------------------------
 #   Requires:                    """
-#    - Python 2.7                """
+#    - Python 3                  """
 #    - imgurpython               """
 #-----------------------------------
 import os
 import sys
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import re
 import smtplib
 import keyring
@@ -24,132 +23,160 @@ from email.mime.multipart import MIMEMultipart
 
 from time import strftime
 
-# Requires Imgur's Python api to be installed. >> https://github.com/Imgur/imgurpython
-# Documentation >> https://api.imgur.com/
-from imgur_api_client import Client
-from config_manager import load_config
+from .imgur_api_client import Client
 
 
-def load_settings():
-    config = load_config('bot_settings.ini')
-    global botmail
-    botmail = config.get('messaging', 'botmail')
-    global devmail
-    devmail = config.get('messaging', 'devmail')
-    global password
-    password = keyring.get_password('cyanide_bot', 'botmail')
-    print password
+class ImgurBot():
+
+    def __init__(self, static):
+        self.static = static
+        self.debug = static.debugger()
+        self.load_settings()
+        self.client = Client(static).login()
+        self.debug.log('ImgurBot successfuly initialized.')
 
 
-#  Email message to developer
-def send_message(MODE, message):
-    load_settings()
-    msg = MIMEMultipart()
-    msg['From'] = botmail
-    msg['To'] = devmail
+    def load_settings(self):
+        self.debug.log('ImgurBot.load_settings()')
+        config = self.static.get_bot_settings()
+        self.botmail = config.get('messaging', 'botmail')
+        self.devmail = config.get('messaging', 'devmail')
+        self.messaging_enabled = config.getboolean('messaging', 'enabled')
 
-    if MODE == "message":
-        msg['Subject'] = 'webdev-server.cyanideBot -- message'
-        text = MIMEText("cyanideBot.explosmdotnet posted an image to Imgur\n" + message)
+    #  Email message to developer
+    def send_message(self, MODE, message):
+        self.debug.log('ImgurBot.send_message() :: sending %s...' % MODE)
+        if messaging_enabled: 
+            msg = MIMEMultipart()
+            msg['From'] = self.botmail
+            msg['To'] = self.devmail
 
-    elif MODE == "error":
-        msg['Subject'] = 'webdev-server.cyanideBot -- error'
-        text = MIMEText("cyanideBot.explosmdotnet failed with error:\n" + str(message))
+            if MODE == "message":
+                msg['Subject'] = 'webdev-server.cyanideBot -- message'
+                text = MIMEText(
+                    'cyanideBot.explosmdotnet posted an image to Imgur\n' \
+                    '%s' % message)
+            elif MODE == "error":
+                msg['Subject'] = 'webdev-server.cyanideBot -- error'
+                text = MIMEText(
+                    'cyanideBot.explosmdotnet failed with error:\n' \
+                    '%s' % str(message))
+            msg.attach(text)
+            try:
+                server = smtplib.SMTP('smtp.gmail.com:587')
+                server.ehlo()
+                server.starttls()
+                server.ehlo()
+                password = keyring.get_password('cyanide_bot', 'botmail')
+                server.login(self.botmail, password)
+                password = None
+                server.sendmail(self.botmail, self.devmail, msg.as_string())
+                server.quit()
+            except Exception as error:
+                self.debug.log_error('ImgurBot.send_message()', error)
+                sys.exit()
+            self.debug.log('ImgurBot.send_message() :: %s sent.' % MODE)
+        else:
+            self.debug.log('ImgurBot.send_message() :: messaging disabled.')
+     
+    ###==========================================================###
+    ### -- CYANIDE-BOT functions                                 ###
+    ### -- This is where specific behaviors should be modified.  ###
+    ###==========================================================### 
 
-    msg.attach(text)
+    def get_urls(self):
+        self.debug.log('ImgurBot.get_urls()')
+        urls = {}  # define in local scope to ensure clean empty dict
 
-    server = smtplib.SMTP('smtp.gmail.com:587')
-    server.ehlo()
-    server.starttls()
-    server.ehlo()
-    server.login(botmail, password)
-    server.sendmail(botmail, devmail, msg.as_string())
-    server.quit()
+        try:
+            response = urllib.request.urlopen('http://explosm.net')
+            html = response.read()
+
+            urls['imgUrl'] = 'http://{0}'.format(re.findall(
+                b'<img id="featured-comic" src="//(.*?)"/></a>', 
+                    html)[0].decode('utf-8'))
+            self.debug.log('Image Url: %s' % urls['imgUrl'])
+
+            urls['permalinkUrl'] = re.findall(
+                b'<input id="permalink" type="text" value="(.*?)" onclick=', 
+                    html)[0].decode('utf-8')
+            self.debug.log('Permalink Url: %s' % urls['permalinkUrl'])
+
+            urls['hotlinkUrl'] = re.findall(
+                b'<a href="(.*?)"><img id="featured-comic" src="', 
+                    html)[0].decode('utf-8')
+            self.debug.log('Hotlink Url: %s' % urls['hotlinkUrl'])
+            return urls
+
+        except Exception as error:
+            self.send_message('error', error)
+            self.debug.log_error('ImgurBot.get_urls()', error)
+            sys.exit()
+
+    def make_post(self, publish=False, tag_image=False, tag=''):
+        self.debug.log('ImgurBot.make_post()')
+
+        # Fetch image and build post metadata
+        urls = self.get_urls()
+        meta = {}
+        meta['album'] = None
+        meta['name'] = None
+        meta['title'] = 'Daily dose of Cyanide for ' + get_date()
+        meta['description'] = (
+            'Permalink -- %s\nFind more at -- http://explosm.net' % (
+                urls['permalinkUrl']))
+
+        try: # imgur_api functionality
+            upload_response = self.upload_from_url(urls['imgUrl'], meta)
+            if publish:
+                publish_to_gallery(upload_response['item_id'], upload_response['title'])
+            if tag_image:
+                if tag is not '':
+                    tag_image(tag, upload_response['item_id'])
+        
+        except Exception as error:
+            self.send_message('error', error)
+            self.debug.log_error('ImgurBot.make_post() :: Failed.', error)
+            sys.exit()
+        
+        self.send_message('message', upload_response['link'])
+        self.debug.log('ImgurBot.make_post() :: Complete.')
+
+    def upload_from_url(self, url, meta):
+        self.debug.log('Uploading image...')
+        try:
+            upload_response = self.client.upload_from_url(url, meta, anon=False)
+            response = {}
+            response['item_id'] = upload_response['id']
+            response['title'] = upload_response['title']
+            response['link'] = upload_response['link']
+        except Exception as error:
+            self.debug.log_error('ImgurBot.upload_from_url()', error)
+            sys.exit()
+        self.debug.log('New image uploaded successfuly.')
+        return response
+
+    def publish_to_gallery(self, item_id, title):
+        self.debug.log('Publishing image to gallery...')
+        try:
+            publish_response = self.client.share_on_imgur(item_id, title)
+            self.debug.log('publish_response=%s' % publish_response)
+        except Exception as error:
+            self.debug.log_error('ImgurBot.publish_to_gallery()', error)
+            sys.exit()
+        self.debug.log('Image published to gallery.')
+
+    def tag_image(self, tag, item_id):
+        self.debug.log('Tagging imgage...')
+        try:
+            tag_response = self.client.gallery_tag_image(tag, item_id)
+            self.debug.log('tag_response=%s' % tag_response)
+        except Exception as error:
+            self.debug.log_error('ImgurBot.tag_image()', error)
+            sys.exit()
+        self.debug.log('Image tagged with: [%s]' % tag)
 
 
 #  Return formatted date string
 def get_date():
     return strftime('%b %d %Y')
-
-
-#  Returns a url dictionary containing regEx matches
-def get_urls():
-    urls = {}  # define in local scope to ensure clean empty dict
-    try:
-        response = urllib2.urlopen('http://explosm.net')
-        html = response.read()
-        urls['imgUrl'] = (
-            "http://" + re.findall(r'<img id="featured-comic" src="//(.*?)"/></a>',
-            html)[0])
-        urls['permalinkUrl'] = (
-            re.findall(r'<input id="permalink" type="text" value="(.*?)" onclick=',
-            html)[0])
-        urls['hotlinkUrl'] = (
-            re.findall(r'<a href="(.*?)"><img id="featured-comic" src="',
-            html)[0])
-        return urls
-    except Exception as error:
-        send_message("error", error)
-        sys.exit()
-
-
-#  This needs to be broken into several smaller funtions
-def make_post(client):
-    urls = get_urls()
-    meta = {}
-    meta['album'] = None
-    meta['name'] = None
-    meta['title'] = "Daily dose of Cyanide for " + GetDate()
-    meta['description'] = (
-        "Permalink -- %s\nFind more at -- http://explosm.net" % (
-            urls['permalinkUrl']))
-    
-    try:
-        print (('>> Uploading image...'))
-        upload_response = client.upload_from_url(urls['imgUrl'], meta, anon=False)
-        print (('>> New image uploaded successfuly,'))
-        item_id = upload_response['id']
-        title = upload_response['title']
-
-        try:
-            print (('   ...publishing to gallery'))
-            publish_response = client.share_on_imgur(item_id, title)
-            print (('>> Image published to gallery,'))
-
-            try:
-                print(('   ...tagging image'))
-                tag = 'cr4sh0verride'
-                tag_response = client.gallery_tag_image(tag, item_id)
-                print (('>> Image tagged: [%s]' % (tag)))
-
-            except Exception as error:
-                print (('>> ERROR -- Failed to tag.'))
-                print (('\t -- %s' % (str(error))))
-                print (('\nquitting...'))
-                sys.exit()
-            
-        except Exception as error:
-            print (('>> ERROR -- Failed to publish.'))
-            print (('\t -- %s' % (str(error))))
-            print (('\nquitting...'))
-            sys.exit()
-        
-        print ('>> New image posted, tagged and shared successfully.')
-        print ('   -- <%s> --\n' % (upload_response['link']))
-        send_message("message", upload_response['link'])
-        sys.exit()
-
-    except Exception as error:
-        print (('>> ERROR -- Failed to upload.'))
-        print (('\t -- %s' % (str(error))))
-        print (('\nquitting...'))
-        sys.exit()
-
-
-def run():
-    # print('>> Bot functionality would run now...')
-    # send_message('message', 'Test')
-    make_post(Client().start())
-
-if __name__ == '__main__':
-    run()

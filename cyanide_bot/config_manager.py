@@ -12,35 +12,34 @@
 #-----------------------------------
 import os
 
-APPLICATION_NAME = "cyanide-bot"
-CONFIG_DIR = os.path.join(os.path.expanduser('~'), '.config')
-CONFIG_PATH = os.path.join(CONFIG_DIR, APPLICATION_NAME)
 
+class ConfigManager():
 
-def get_config():
-    ''' Create a config parser for reading INI files '''
-    try:
-        import ConfigParser
-        return ConfigParser.ConfigParser()
-    except:
-        import configparser
-        return configparser.ConfigParser()
+    def __init__(self, app_name, config_dir):
+        self.config_path = os.path.join(config_dir, app_name)
 
+    def get_config(self):
+        ''' Create a config parser for reading INI files '''
+        try:
+            import configparser
+            return configparser.ConfigParser()
+        except:
+            import configparser
+            return configparser.ConfigParser()
 
-def load_config(config_file):
-    config = get_config()
-    try:
-        config.read(os.path.join(CONFIG_PATH, config_file))
-        return config
-    except:
-        return config
+    def load_config(self, config_file):
+        config = self.get_config()
+        try:
+            config.read(os.path.join(self.config_path, config_file))
+            return config
+        except:
+            return config
 
-
-def write_config(config_instance, config_file):
-    try:  # try to write to directory, or
-        with open(os.path.join(CONFIG_PATH, config_file), 'w') as configFile:
-            config_instance.write(configFile)
-    except:  # create the directory, if necessary
-        os.mkdir(CONFIG_PATH)
-        with open(os.path.join(CONFIG_PATH, config_file), 'w') as configFile:
-            config_instance.write(configFile)
+    def write_config(self, config_instance, config_file):
+        try:  # try to write to directory, or
+            with open(os.path.join(self.config_path, config_file), 'w') as configFile:
+                config_instance.write(configFile)
+        except:  # create the directory, if necessary
+            os.mkdir(self.config_path)
+            with open(os.path.join(self.config_path, config_file), 'w') as configFile:
+                config_instance.write(configFile)
