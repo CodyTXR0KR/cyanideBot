@@ -86,42 +86,73 @@ class ImgurBot():
     ### -- This is where specific behaviors should be modified.  ###
     ###==========================================================###
 
-    def get_urls(self):
+    def get_urls(self, random=False):
         self.debug.log('ImgurBot.get_urls()')
-        urls = {}  # define in local scope to ensure clean empty dict
-
-        try:
+        self.urls = {}  # define in local scope to ensure clean empty dict
+        ## test if current comic is an amiated episode
+        if random == False:
             response = urllib.request.urlopen('http://explosm.net')
             html = response.read()
+        random = self.isAnimation(html)
 
-            urls['imgUrl'] = 'http://{0}'.format(re.findall(
-                b'<img id="featured-comic" src="//(.*?)"/></a>',
-                    html)[0].decode('utf-8'))
-            self.debug.log('Image Url: {0}'.format(urls['imgUrl']))
+        try:
+            if random:
+                response = urllib.request.urlopen('http://explosm.net/comics/random')
+                html = response.read()
 
-            urls['permalinkUrl'] = re.findall(
-                b'<input id="permalink" type="text" value="(.*?)" onclick=',
-                    html)[0].decode('utf-8')
-            self.debug.log('Permalink Url: {0}'.format(urls['permalinkUrl']))
+                self.urls['imgUrl'] = 'http://{0}'.format(re.findall(
+                    b'<img id="main-comic" src="//(.*?)"/>', html)[0].decode('utf-8'))
+                self.debug.log('Image Url: {0}'.format(self.urls['imgUrl']))
 
-            urls['hotlinkUrl'] = 'http://explosm.net{0}'.format(re.findall(
-                b'<a href="(.*?)"><img id="featured-comic" src="',
-                    html)[0].decode('utf-8'))
-            self.debug.log('Hotlink Url: {0}'.format(urls['hotlinkUrl']))
+                self.urls['permalinkUrl'] = re.findall(
+                    b'<input id="permalink" type="text" value="(.*?)" onclick=',
+                        html)[0].decode('utf-8')
+                self.debug.log('Permalink Url: {0}'.format(self.urls['permalinkUrl']))
+            
+            else:
+                # response = urllib.request.urlopen('http://explosm.net')
+                # html = response.read()
+                self.urls['imgUrl'] = 'http://{0}'.format(re.findall(
+                    b'<img id="featured-comic" src="//(.*?)"/></a>',
+                        html)[0].decode('utf-8'))
+                self.debug.log('Image Url: {0}'.format(self.urls['imgUrl']))
+
+                self.urls['permalinkUrl'] = re.findall(
+                    b'<input id="permalink" type="text" value="(.*?)" onclick=',
+                        html)[0].decode('utf-8')
+                self.debug.log('Permalink Url: {0}'.format(self.urls['permalinkUrl']))
+
+                # self.urls['hotlinkUrl'] = 'http://explosm.net{0}'.format(re.findall(
+                #     b'<a href="(.*?)"><img id="featured-comic" src="',
+                #         html)[0].decode('utf-8'))
+                # self.debug.log('Hotlink Url: {0}'.format(self.urls['hotlinkUrl']))
 
         except Exception as error:
             self.send_message('error', error)
             self.debug.log_error('ImgurBot.get_urls() :: Failed.', error)
             sys.exit()
 
-        return urls
         self.debug.log('ImgurBot.get_urls() :: Complete.')
+        return self.urls
+        
+    def isAnimation(self, html):
+        isAnimation = False
+        try:
+            current_comic = re.findall(
+                b'<a href="(.*?)"><img id="featured-comic" src="//files.explosm.net/comics/.*"/></a>', 
+                    html)[0].decode('utf-8')
+        except Exception as e:
+            self.debug.log_error('ImgurBot.isAnimation threw an exception', e)
+        if '//explosm.net/show/episode/' in current_comic:
+            self.debug.log('ImgurBot.isAnimation :: animation found, switching to random')
+            self.urls['hotlinkUrl'] = current_comic
+            isAnimation = True
+        return isAnimation
 
-    def make_post(self, publish=False, tag_image=False, tag=''):
+    def make_post(self, publish=False, tag_image=False, tag='', random=False):
         self.debug.log('ImgurBot.make_post()')
-
         # Fetch image and build post metadata
-        urls = self.get_urls()
+        urls = self.get_urls(random=random)
         meta = {}
         meta['album'] = None
         meta['name'] = None

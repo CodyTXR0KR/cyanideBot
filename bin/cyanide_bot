@@ -35,21 +35,23 @@ def parse_args():
 	return args
 
 def main(args):
-	if args.config:
-		_static.debug.log('Running cyanide-bot configuration...')
-		first_run(_static)
-	else:
-		cyanide_bot = ImgurBot(_static)
-		_static.debug.log('Running bot_logic functionality...')
-		if args.tag is not None:
-			if args.publish: # publish option must be true to tag an upload
-				cyanide_bot.make_post(publish=args.publish, 
+    if args.config:
+        _static.debug.log('Running cyanide-bot configuration...')
+        first_run(_static)
+    else:
+        cyanide_bot = ImgurBot(_static)
+        _static.debug.log('Running bot_logic functionality...')
+        if args.tag is not None:
+            if args.publish: # publish option must be true to tag an upload
+                cyanide_bot.make_post(publish=args.publish, 
                     tag_image=True, tag=args.tag[0])
-			else:
-				_static.debug.log('-p, --publish option must be passed to tag '
+            else:
+                _static.debug.log('-p, --publish option must be passed to tag '
                     'an upload. Operation aborted')
-		else:
-			cyanide_bot.make_post(publish=args.publish)
+        if args.random:
+            cyanide_bot.make_post(publish=args.publish, random=True)
+        else:
+            cyanide_bot.make_post(publish=args.publish)
 
 if __name__ == '__main__':
 	args = parse_args()

@@ -30,7 +30,11 @@ def parse_args():
     parser.add_argument('-p', '--publish', action = 'store_true',
         help = 'publish image to gallery.')
     parser.add_argument('-t', '--tag', nargs = 1,
-        help = 'tag an image that has been published.\npublish must be true.')
+        help = 'tag an image that has been published.\n'
+        'publish must be true.')
+    parser.add_argument('-r', '--random', dest='random', action='store_true',
+        help = 'post random cyanice and happiness comic,\n'
+        'instead of most recent')
     args = parser.parse_args()
     return args
 
@@ -48,6 +52,8 @@ def main(args):
             else:
                 _static.debug.log('-p, --publish option must be passed to tag '
                     'an upload. Operation aborted')
+        if args.random:
+            cyanide_bot.make_post(publish=args.publish, random=True)
         else:
             cyanide_bot.make_post(publish=args.publish)
 
