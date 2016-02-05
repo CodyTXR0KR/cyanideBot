@@ -22,17 +22,21 @@ _static = StaticInterface()
 
 
 def parse_args():
-	desc = ('imgur user bot that posts current cyanide and happiness comics')
-	parser = argparse.ArgumentParser(description = desc,
-		formatter_class = argparse.RawTextHelpFormatter)
-	parser.add_argument('-c', '--config', action = 'store_true',
-		help = 'run cyanide-bot configuration.')
-	parser.add_argument('-p', '--publish', action = 'store_true',
-		help = 'publish image to gallery.')
-	parser.add_argument('-t', '--tag', nargs = 1,
-		help = 'tag an image that has been published.\npublish must be true.')
-	args = parser.parse_args()
-	return args
+    desc = ('imgur user bot that posts current cyanide and happiness comics')
+    parser = argparse.ArgumentParser(description = desc,
+        formatter_class = argparse.RawTextHelpFormatter)
+    parser.add_argument('-c', '--config', action = 'store_true',
+        help = 'run cyanide-bot configuration.')
+    parser.add_argument('-p', '--publish', action = 'store_true',
+        help = 'publish image to gallery.')
+    parser.add_argument('-t', '--tag', nargs = 1,
+        help = 'tag an image that has been published.\n'
+        'publish must be true.')
+    parser.add_argument('-r', '--random', dest='random', action='store_true',
+        help = 'post random cyanide and happiness comic,\n'
+        'instead of most recent')
+    args = parser.parse_args()
+    return args
 
 def main(args):
     if args.config:

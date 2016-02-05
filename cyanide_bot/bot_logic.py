@@ -13,7 +13,6 @@
 import sys
 import urllib.request
 import urllib.error
-import urllib.parse
 import re
 import smtplib
 import keyring
@@ -99,7 +98,6 @@ class ImgurBot():
             if random:
                 response = urllib.request.urlopen('http://explosm.net/comics/random')
                 html = response.read()
-
                 self.urls['imgUrl'] = 'http://{0}'.format(re.findall(
                     b'<img id="main-comic" src="//(.*?)"/>', html)[0].decode('utf-8'))
                 self.debug.log('Image Url: {0}'.format(self.urls['imgUrl']))
@@ -108,7 +106,6 @@ class ImgurBot():
                     b'<input id="permalink" type="text" value="(.*?)" onclick=',
                         html)[0].decode('utf-8')
                 self.debug.log('Permalink Url: {0}'.format(self.urls['permalinkUrl']))
-            
             else:
                 # response = urllib.request.urlopen('http://explosm.net')
                 # html = response.read()

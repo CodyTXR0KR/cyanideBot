@@ -33,7 +33,7 @@ def parse_args():
         help = 'tag an image that has been published.\n'
         'publish must be true.')
     parser.add_argument('-r', '--random', dest='random', action='store_true',
-        help = 'post random cyanice and happiness comic,\n'
+        help = 'post random cyanide and happiness comic,\n'
         'instead of most recent')
     args = parser.parse_args()
     return args
